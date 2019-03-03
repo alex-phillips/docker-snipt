@@ -11,15 +11,15 @@ pipeline {
     BUILDS_DISCORD=credentials('build_webhook_url')
     GITHUB_TOKEN=credentials('498b4638-2d02-4ce5-832d-8a57d01d97ab')
     EXT_GIT_BRANCH = 'master'
-    EXT_USER = 'healthchecks'
-    EXT_REPO = 'healthchecks'
-    BUILD_VERSION_ARG = 'HEALTHCHECKS_RELEASE'
+    EXT_USER = 'alex-phillips'
+    EXT_REPO = 'snipt'
+    BUILD_VERSION_ARG = 'SNIPT_RELEASE'
     LS_USER = 'linuxserver'
-    LS_REPO = 'docker-healthchecks'
-    CONTAINER_NAME = 'healthchecks'
-    DOCKERHUB_IMAGE = 'linuxserver/healthchecks'
-    DEV_DOCKERHUB_IMAGE = 'lsiodev/healthchecks'
-    PR_DOCKERHUB_IMAGE = 'lspipepr/healthchecks'
+    LS_REPO = 'docker-snipt'
+    CONTAINER_NAME = 'snipt'
+    DOCKERHUB_IMAGE = 'linuxserver/snipt'
+    DEV_DOCKERHUB_IMAGE = 'lsiodev/snipt'
+    PR_DOCKERHUB_IMAGE = 'lspipepr/snipt'
     DIST_IMAGE = 'alpine'
     MULTIARCH='true'
     CI='true'
@@ -192,7 +192,7 @@ pipeline {
               set -e
               TEMPDIR=$(mktemp -d)
               docker pull linuxserver/jenkins-builder:latest
-              docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -e GITHUB_BRANCH=master -v ${TEMPDIR}:/ansible/jenkins linuxserver/jenkins-builder:latest 
+              docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -e GITHUB_BRANCH=master -v ${TEMPDIR}:/ansible/jenkins linuxserver/jenkins-builder:latest
               docker pull linuxserver/doc-builder:latest
               docker run --rm -e CONTAINER_NAME=${CONTAINER_NAME} -e GITHUB_BRANCH=master -v ${TEMPDIR}:/ansible/readme linuxserver/doc-builder:latest
               if [ "$(md5sum ${TEMPDIR}/${LS_REPO}/Jenkinsfile | awk '{ print $1 }')" != "$(md5sum Jenkinsfile | awk '{ print $1 }')" ] || [ "$(md5sum ${TEMPDIR}/${CONTAINER_NAME}/README.md | awk '{ print $1 }')" != "$(md5sum README.md | awk '{ print $1 }')" ]; then
