@@ -1,31 +1,21 @@
 #!/usr/bin/with-contenv bash
 
 # set default values for variables
-# declare -A SNIPT_CONF
-# SNIPT_CONF[DEBUG]=${DEBUG:-False}
-# SNIPT_CONF[SITE_ROOT]=${SITE_ROOT:-https://snipt.example.com}
-# SNIPT_CONF[SITE_NAME]=${SITE_NAME:-snipt}
-# SNIPT_CONF[DEFAULT_FROM_EMAIL]=${DEFAULT_FROM_EMAIL:-noreply@example.com}
-# SNIPT_CONF[EMAIL_HOST]=${EMAIL_HOST:-smtp.gmail.com}
-# SNIPT_CONF[EMAIL_PORT]=${EMAIL_PORT:-587}
-# SNIPT_CONF[EMAIL_HOST_USER]=${EMAIL_HOST_USER:-username}
-# SNIPT_CONF[EMAIL_HOST_PASSWORD]=${EMAIL_HOST_PASSWORD:-password}
-# SNIPT_CONF[EMAIL_USE_TLS]=${EMAIL_USE_TLS:-True}
-
-# if [ ! -f "/app/snipt/settings_local.py" ]; then
-# 	# sed in values or skip if value not set
-# 	for KEY in "${!SNIPT_CONF[@]}"; do \
-# 	if [[ ${SNIPT_CONF[$KEY]} == "" ]]; then \
-# 	:
-# 	else echo "$KEY = \"${SNIPT_CONF[$KEY]}\"" >> /config/local_settings.py
-# 	fi
-# 	done
-# fi
+declare -A SNIPT_CONF
+SNIPT_CONF[SITE_HOST]=${SITE_HOST:-snipt.example.com}
 
 if [ ! -f "/config/settings_local.py" ]; then
 	mv /defaults/settings_local.py /config/
 	SECRET_KEY=$(date +%s | sha256sum | base64 | head -c 32)
 	sed -i 's|changeme|'${SECRET_KEY}'|g' /config/settings_local.py
+
+	# sed in values or skip if value not set
+	for KEY in "${!SNIPT_CONF[@]}"; do \
+	if [[ ${SNIPT_CONF[$KEY]} == "" ]]; then \
+	:
+	else sed -i 's|{{'$KEY'}}|'${SNIPT_CONF[$KEY]}'|g' /config/settings_local.py
+	fi
+	done
 fi
 
 rm /app/snipt/settings_local.py
