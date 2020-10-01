@@ -16,7 +16,6 @@ RUN \
 	make \
 	musl-dev \
 	postgresql-dev \
-	py3-pip \
 	python3-dev \
 	zlib-dev && \
  echo "**** install runtime packages ****" && \
@@ -24,6 +23,9 @@ RUN \
 	python3 \
 	uwsgi \
 	uwsgi-python3 && \
+ echo "**** install pip ****" && \
+ python3 -m ensurepip && \
+ rm -rf /usr/lib/python*/ensurepip && \
  echo "**** install snipt ****" && \
  if [ -z ${SNIPT_VERSION+x} ]; then \
 	SNIPT_VERSION=$(curl -sX GET https://api.github.com/repos/nicksergeant/snipt/commits/master \
